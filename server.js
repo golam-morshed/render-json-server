@@ -1,12 +1,12 @@
-import jsonServer from 'json-server'
+import { Low } from 'lowdb'
+import { JSONFile } from 'lowdb/node'
+import { createApp } from 'json-server/lib/app.js'
 
-const server = jsonServer.create()
+const adapter = new JSONFile('db.json')
+const db = new Low(adapter, {})
+await db.read()
 
-const router = jsonServer.router('db.json')
-const middlewares = jsonServer.defaults()
- 
-server.use(middlewares)
-server.use('/api', router)
-server.listen(process.env.PORT || 5000, () => {
+const app = createApp(db)
+app.listen(process.env.PORT || 5000, () => {
   console.log('JSON Server is running')
 })
